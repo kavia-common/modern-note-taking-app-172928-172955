@@ -1,48 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
+import './index.css';
+import { NotesProvider, useNotes } from './state/NotesContext';
+import RoutesView from './router/Routes';
+import Header from './components/Header';
+import FAB from './components/FAB';
+import { THEME_STORAGE_KEY } from './utils/constants';
 
-// PUBLIC_INTERFACE
-function App() {
-  const [theme, setTheme] = useState('light');
+// Layout wrapper to apply theme to the document and render header/routes/fab
+function AppShell() {
+  const { state, actions } = useNotes();
 
-  // Effect to apply theme to document element
+  // Apply theme to <html> for CSS variables
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    const themeAttr = state.theme;
+    document.documentElement.setAttribute('data-theme', themeAttr);
+  }, [state.theme]);
 
   // PUBLIC_INTERFACE
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  const onToggleTheme = () => {
+    actions.toggleTheme();
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        >
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          Current theme: <strong>{theme}</strong>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" data-testid="app-root">
+      <Header
+        title="Notes Pro"
+        theme={state.theme}
+        onToggleTheme={onToggleTheme}
+      />
+      <main className="container" role="main" aria-label="Main Content">
+        <RoutesView />
+      </main>
+      <FAB ariaLabel="Add note" onClick={() => actions.createNote()} />
     </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function App() {
+  /**
+   * Root application component.
+   * - Wraps Router and global NotesProvider.
+   * - Ensures theme preference is loaded before shell renders.
+   */
+  useEffect(() => {
+    // Ensure initial theme attribute for SSR/CSS flash mitigation
+    const initialTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
+    document.documentElement.setAttribute('data-theme', initialTheme);
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <NotesProvider>
+        <AppShell />
+      </NotesProvider>
+    </BrowserRouter>
   );
 }
 

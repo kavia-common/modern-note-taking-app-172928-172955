@@ -1,82 +1,51 @@
-# Lightweight React Template for KAVIA
+# Notes Pro Frontend
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A modern, lightweight React app for creating and managing notes. Styled with the Ocean Professional theme.
 
 ## Features
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- Routing via react-router-dom
+  - /, /note/:id, /archived, /trash, /settings
+- Notes CRUD flows
+  - Create, update, delete (trash), restore, archive, unarchive, pin toggle, search
+- Local persistence via localStorage
+- Theme preference (light/dark) persisted
+- Responsive grid, search bar, floating action button (FAB)
+- Settings for theme and data export/import (JSON)
+- API client shim (async) for future backend integration
+- Accessibility: ARIA labels, focus-visible outlines
+- Minimal smoke test updated to check header/FAB
 
 ## Getting Started
 
-In the project directory, you can run:
+- Install dependencies:
+  - npm install
+  - Note: you may need `react-router-dom` installed: `npm install react-router-dom`
+- Run dev:
+  - npm start
 
-### `npm start`
+## Code Structure
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- src/router/Routes.jsx: Route definitions
+- src/state/NotesContext.jsx: Global state, reducer, persistence, actions
+- src/components/*: UI components (Header, SearchBar, NoteCard, NoteEditor, etc)
+- src/pages/*: Route pages
+- src/services/apiClient.js: Async API shim
+- src/utils/*: Helpers and constants
 
-### `npm test`
+## Theme
 
-Launches the test runner in interactive watch mode.
+Ocean Professional palette:
+- Primary: #2563EB
+- Secondary: #F59E0B
+- Error: #EF4444
+- Background: #f9fafb (light), #0b1220 (dark)
+- Surface: #ffffff (light), #0f172a (dark)
+- Text: #111827 (light), #E5E7EB (dark)
 
-### `npm run build`
+Focus styles are provided via `:focus-visible` to ensure keyboard accessibility.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Testing
 
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
-
-### Components
-
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
-
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+A basic smoke test asserts the presence of the header title or FAB:
+- src/App.test.js
